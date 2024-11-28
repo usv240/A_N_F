@@ -16,7 +16,7 @@ const Login = ({ setIsAuthenticated }) => {
 
     try {
         console.log("Sending POST request to login endpoint with email and password");
-        const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
+        const response = await axios.post('http://137.184.155.248:3000/api/users/login', { email, password });
 
         console.log("Response received from backend:", response); // Log the full response object
 
