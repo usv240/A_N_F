@@ -13,37 +13,43 @@ const Login = ({ setIsAuthenticated }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         console.log("Login form submitted"); // Debug start of function
+        
+        console.log("Current email:", email); // Check the current state of email
+        console.log("Current password:", password); // Check the current state of password
     
         try {
-            console.log("Sending POST request to login endpoint with email and password");
-            const response = await axios.post('http://137.184.155.248:3000/api/users/login', { email, password });
+            console.log("Preparing POST request to login endpoint...");
+            const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
     
+            console.log("POST request sent. Waiting for response...");
             console.log("Response received from backend:", response); // Log the full response object
     
-            if (response.data) {
-                console.log("Response data:", response.data); // Log the data inside the response
+            if (response && response.data) {
+                console.log("Response data exists:", response.data); // Log the data inside the response
             } else {
-                console.error("Response data is empty or undefined");
+                console.error("No response data received");
             }
     
-            if (response.data.token) {
-                console.log("Token received:", response.data.token); // Log the token received
-                console.log("Storing token in localStorage");
+            if (response.data && response.data.token) {
+                console.log("Token received from backend:", response.data.token); // Log the token received
+    
+                console.log("Storing token in localStorage...");
                 localStorage.setItem('token', response.data.token);
     
-                console.log("Setting authentication state to true");
+                console.log("Updating authentication state to true...");
                 setIsAuthenticated(true);
     
+                console.log("Triggering success toast...");
                 toast.success("Login successful! Redirecting to dashboard...", {
                     position: "top-center",
                     autoClose: 2000,
                     hideProgressBar: true,
                 });
     
-                console.log("Navigating to /dashboard after delay");
+                console.log("Navigating to /dashboard after 2-second delay...");
                 setTimeout(() => navigate('/dashboard'), 2000);
             } else {
-                console.error("Token not received in response");
+                console.error("No token received in the response data");
                 toast.error("No token received, please try again.", {
                     position: "top-center",
                     autoClose: 3000,
@@ -51,11 +57,13 @@ const Login = ({ setIsAuthenticated }) => {
                 });
             }
         } catch (error) {
-            console.error("Error during login request:", error); // Log general error
+            console.error("Error occurred during login attempt:", error); // Log the error object
             if (error.response) {
-                console.error("Error response from backend:", error.response); // Log backend error details
-                console.error("Error response status:", error.response.status);
-                console.error("Error response data:", error.response.data);
+                console.error("Backend responded with an error:", error.response); // Log backend error details
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+            } else {
+                console.error("No response from backend or other error occurred");
             }
     
             toast.error("Login failed, please check your credentials and try again.", {
@@ -67,6 +75,7 @@ const Login = ({ setIsAuthenticated }) => {
     
         console.log("End of handleLogin function"); // Mark end of function
     };
+    
   
  
     const handleNavigateToRegister = () => {
