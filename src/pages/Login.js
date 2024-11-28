@@ -13,41 +13,22 @@ const Login = ({ setIsAuthenticated }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/users/login', { email, password });
+            const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
+            console.log(response.data); // Debugging response data
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 setIsAuthenticated(true);
-                toast.success("Login successful! Redirecting to dashboard...", {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
+                toast.success("Login successful! Redirecting to dashboard...", { ... });
                 setTimeout(() => navigate('/dashboard'), 2000);
             } else {
-                toast.error("No token received, please try again.", {
-                    position: "top-center",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
+                toast.error("No token received, please try again.", { ... });
             }
         } catch (error) {
             console.error("Login failed", error);
-            toast.error("Login failed, please check your credentials and try again.", {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            toast.error("Login failed, please check your credentials and try again.", { ... });
         }
     };
+    
 
     const handleNavigateToRegister = () => {
         navigate('/register');
