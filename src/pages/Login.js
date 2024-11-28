@@ -12,22 +12,38 @@ const Login = ({ setIsAuthenticated }) => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        console.log("Login form submitted"); // Debug start of function
+    
         try {
-            const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
-            console.log("Response data:", response.data); // Debugging response
+            console.log("Sending POST request to login endpoint with email and password");
+            const response = await axios.post('http://137.184.155.248:3000/api/users/login', { email, password });
+    
+            console.log("Response received from backend:", response); // Log the full response object
+    
+            if (response.data) {
+                console.log("Response data:", response.data); // Log the data inside the response
+            } else {
+                console.error("Response data is empty or undefined");
+            }
     
             if (response.data.token) {
-                console.log("Token received:", response.data.token); // Debug token
+                console.log("Token received:", response.data.token); // Log the token received
+                console.log("Storing token in localStorage");
                 localStorage.setItem('token', response.data.token);
+    
+                console.log("Setting authentication state to true");
                 setIsAuthenticated(true);
+    
                 toast.success("Login successful! Redirecting to dashboard...", {
                     position: "top-center",
                     autoClose: 2000,
                     hideProgressBar: true,
                 });
+    
+                console.log("Navigating to /dashboard after delay");
                 setTimeout(() => navigate('/dashboard'), 2000);
             } else {
-                console.error("No token in response:", response.data); // Debugging error
+                console.error("Token not received in response");
                 toast.error("No token received, please try again.", {
                     position: "top-center",
                     autoClose: 3000,
@@ -35,18 +51,24 @@ const Login = ({ setIsAuthenticated }) => {
                 });
             }
         } catch (error) {
-            console.error("Login failed:", error); // Debugging error
+            console.error("Error during login request:", error); // Log general error
+            if (error.response) {
+                console.error("Error response from backend:", error.response); // Log backend error details
+                console.error("Error response status:", error.response.status);
+                console.error("Error response data:", error.response.data);
+            }
+    
             toast.error("Login failed, please check your credentials and try again.", {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: true,
             });
         }
+    
+        console.log("End of handleLogin function"); // Mark end of function
     };
-    
-    
-    
-
+  
+ 
     const handleNavigateToRegister = () => {
         navigate('/register');
     };
