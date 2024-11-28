@@ -15,8 +15,11 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Form data being submitted:', formData); // Debug form data
         try {
-            await axios.post('/api/users/register', formData);
+            const response = await axios.post('http://137.184.155.248:3000/api/users/register', formData);
+            console.log('Response from backend:', response); // Debug backend response
+    
             toast.success('Registration Successful! Redirecting to login...', {
                 position: "top-center",
                 autoClose: 2000,
@@ -27,6 +30,10 @@ const Register = () => {
             });
             setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
         } catch (error) {
+            console.error('Error during registration request:', error); // Debug general error
+            if (error.response) {
+                console.error('Error response from backend:', error.response); // Debug backend response
+            }
             toast.error('Registration Failed. Please try again.', {
                 position: "top-center",
                 autoClose: 3000,
@@ -37,6 +44,7 @@ const Register = () => {
             });
         }
     };
+    
 
     const handleNavigateToLogin = () => {
         navigate('/login');
