@@ -14,8 +14,10 @@ const Login = ({ setIsAuthenticated }) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
-            console.log(response.data); // Debugging response
+            console.log("Response data:", response.data); // Debugging response
+    
             if (response.data.token) {
+                console.log("Token received:", response.data.token); // Debug token
                 localStorage.setItem('token', response.data.token);
                 setIsAuthenticated(true);
                 toast.success("Login successful! Redirecting to dashboard...", {
@@ -25,6 +27,7 @@ const Login = ({ setIsAuthenticated }) => {
                 });
                 setTimeout(() => navigate('/dashboard'), 2000);
             } else {
+                console.error("No token in response:", response.data); // Debugging error
                 toast.error("No token received, please try again.", {
                     position: "top-center",
                     autoClose: 3000,
@@ -32,7 +35,7 @@ const Login = ({ setIsAuthenticated }) => {
                 });
             }
         } catch (error) {
-            console.error("Login failed", error);
+            console.error("Login failed:", error); // Debugging error
             toast.error("Login failed, please check your credentials and try again.", {
                 position: "top-center",
                 autoClose: 3000,
@@ -40,6 +43,7 @@ const Login = ({ setIsAuthenticated }) => {
             });
         }
     };
+    
     
     
 
